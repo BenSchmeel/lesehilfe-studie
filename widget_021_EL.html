@@ -9,74 +9,147 @@
   :root{
     --paper:#faf8f4;--ink:#1a1814;--ink-soft:#4a4540;
     --accent:#8b5e3c;--accent-light:#f0e6d8;
-    --tooltip-bg:#2c2420;--tooltip-text:#f5f0e8;
+    --panel-bg:#2c2420;--panel-text:#f5f0e8;
     --border:#d4ccc0;--seen-color:#d4b896;
+    --panel-width:260px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink)}
-  .wrap{max-width:780px;margin:0 auto;padding:28px 24px 60px}
-  .hint{font-size:.82rem;color:var(--ink-soft);margin-bottom:18px;padding:10px 14px;
-        background:var(--accent-light);border-radius:4px;border-left:3px solid var(--accent)}
-  .text-box{background:white;border:1px solid var(--border);border-radius:4px;
-            padding:36px 40px;line-height:2.05;font-family:'Lora',serif;
-            font-size:1.05rem;box-shadow:0 2px 12px rgba(0,0,0,.04)}
-  .w{cursor:pointer;border-bottom:1px dotted var(--accent);border-radius:2px;
-     padding:0 1px;transition:background .15s;display:inline}
-  .w:hover{background:var(--accent-light)}
-  .w.seen{background:var(--accent-light);border-bottom-color:var(--seen-color);color:var(--accent)}
-  .w.phrase{border-bottom:2px dashed #b07d50}
-  .w.phrase:hover{background:#f5e8d5}
-  .w.phrase.seen{border-bottom-color:#c9956a}
-  .tip{position:fixed;background:var(--tooltip-bg);color:var(--tooltip-text);
-       border-radius:8px;padding:15px 18px;max-width:320px;min-width:200px;
-       font-family:'Source Sans 3',sans-serif;font-size:.88rem;line-height:1.65;
-       box-shadow:0 8px 32px rgba(0,0,0,.28);z-index:9999;pointer-events:none;
-       opacity:0;transform:translateY(6px);transition:opacity .18s,transform .18s}
-  .tip.on{opacity:1;transform:translateY(0)}
-  .tip-arr{position:absolute;width:0;height:0;
-           border-left:7px solid transparent;border-right:7px solid transparent;
-           border-top:7px solid var(--tooltip-bg);bottom:-7px;
-           left:50%;transform:translateX(-50%)}
-  .tw{font-weight:600;font-size:.96rem;color:#f0d9b8;display:block;
-      margin-bottom:3px;font-family:'Lora',serif}
-  .tpos{font-size:.72rem;color:#9e8a78;text-transform:uppercase;
-        letter-spacing:.06em;display:block;margin-bottom:7px}
-  .tdef{color:#d4c9be}
-  .tex{margin-top:9px;font-style:italic;font-size:.82rem;color:#8a7a6e;
-       border-top:1px solid rgba(255,255,255,.08);padding-top:8px}
-  .tphrase{display:inline-block;font-size:.7rem;background:#5a3e2b;color:#d4a96a;
-           border-radius:3px;padding:1px 6px;margin-bottom:5px;letter-spacing:.04em}
-  .legend{margin-top:14px;display:flex;gap:20px;flex-wrap:wrap;font-size:.78rem;color:var(--ink-soft)}
-  .leg-item{display:flex;align-items:center;gap:6px}
-  @media(max-width:600px){.text-box{padding:20px 16px;font-size:.97rem}}
+
+  /* ── Layout: Text links, Panel rechts ── */
+  .layout{
+    display:flex;
+    align-items:flex-start;
+    max-width:1060px;
+    margin:0 auto;
+    padding:24px 16px 60px;
+    gap:20px;
+  }
+  .main{flex:1;min-width:0;}
+
+  /* ── Erklärungsleiste rechts ── */
+  .panel{
+    width:var(--panel-width);
+    flex-shrink:0;
+    position:sticky;
+    top:20px;
+    background:var(--panel-bg);
+    border-radius:8px;
+    padding:18px 16px;
+    color:var(--panel-text);
+    font-size:.88rem;
+    line-height:1.65;
+    min-height:180px;
+    box-shadow:0 4px 20px rgba(0,0,0,.2);
+    transition:opacity .2s;
+  }
+  .panel-empty{
+    opacity:.45;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:.82rem;
+    color:#9e8a78;
+    min-height:120px;
+  }
+  .panel-content{display:none;}
+  .panel-content.visible{display:block;}
+  .p-badge{
+    display:inline-block;font-size:.7rem;background:#5a3e2b;color:#d4a96a;
+    border-radius:3px;padding:1px 7px;margin-bottom:8px;letter-spacing:.04em;
+  }
+  .p-word{
+    font-family:'Lora',serif;font-weight:600;font-size:1.05rem;
+    color:#f0d9b8;display:block;margin-bottom:3px;
+  }
+  .p-pos{
+    font-size:.72rem;color:#9e8a78;text-transform:uppercase;
+    letter-spacing:.06em;display:block;margin-bottom:8px;
+  }
+  .p-def{color:#d4c9be;display:block;}
+  .p-ex{
+    margin-top:10px;font-style:italic;font-size:.82rem;color:#8a7a6e;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:9px;display:block;
+  }
+
+  /* ── Hinweis oben ── */
+  .hint{
+    font-size:.82rem;color:var(--ink-soft);margin-bottom:16px;
+    padding:9px 14px;background:var(--accent-light);
+    border-radius:4px;border-left:3px solid var(--accent);
+  }
+
+  /* ── Textbox ── */
+  .text-box{
+    background:white;border:1px solid var(--border);border-radius:4px;
+    padding:32px 36px;line-height:2.05;font-family:'Lora',serif;
+    font-size:1.05rem;box-shadow:0 2px 12px rgba(0,0,0,.04);
+  }
+
+  /* ── Anklickbare Wörter ── */
+  .w{
+    cursor:pointer;border-bottom:1px dotted var(--accent);
+    border-radius:2px;padding:0 1px;transition:background .15s;display:inline;
+  }
+  .w:hover{background:var(--accent-light);}
+  .w.seen{background:var(--accent-light);border-bottom-color:var(--seen-color);color:var(--accent);}
+  .w.active{background:var(--accent);color:white;border-bottom-color:transparent;}
+  .w.phrase{border-bottom:2px dashed #b07d50;}
+  .w.phrase.seen{border-bottom-color:#c9956a;}
+  .w.phrase.active{background:var(--accent);color:white;}
+
+  /* ── Legende ── */
+  .legend{
+    margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;
+    font-size:.76rem;color:var(--ink-soft);
+  }
+  .leg-item{display:flex;align-items:center;gap:5px;}
+
+  @media(max-width:700px){
+    .layout{flex-direction:column;}
+    .panel{width:100%;position:static;}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="hint">
-    Klicken Sie auf ein <u style="text-decoration-style:dotted">unterstrichenes Wort</u> fuer eine Erklaerung.
-    &nbsp;&nbsp;<span style="border-bottom:2px dashed #b07d50;padding:0 3px">Gestrichelt</span> = Redewendung oder feste Phrase.
+<div class="layout">
+
+  <!-- Linke Spalte: Text -->
+  <div class="main">
+    <div class="hint">
+      Klicken Sie auf ein <u style="text-decoration-style:dotted">unterstrichenes Wort</u> – die Erklärung erscheint rechts.
+      &nbsp;<span style="border-bottom:2px dashed #b07d50;padding:0 2px">Gestrichelt</span> = Redewendung.
+    </div>
+    <div class="text-box" id="tb"></div>
+    <div class="legend">
+      <span class="leg-item"><span style="border-bottom:1px dotted #8b5e3c;padding:0 3px">Wort</span>&nbsp;erklärtes Wort</span>
+      <span class="leg-item"><span style="border-bottom:2px dashed #b07d50;padding:0 3px">Phrase</span>&nbsp;Redewendung</span>
+      <span class="leg-item"><span style="background:#f0e6d8;border-radius:2px;padding:0 3px">farbig</span>&nbsp;bereits nachgeschlagen</span>
+    </div>
   </div>
-  <div class="text-box" id="tb"></div>
-  <div class="legend">
-    <span class="leg-item"><span style="border-bottom:1px dotted #8b5e3c;padding:0 4px">Wort</span>&nbsp;erklärtes Wort</span>
-    <span class="leg-item"><span style="border-bottom:2px dashed #b07d50;padding:0 4px">Phrase</span>&nbsp;Redewendung</span>
-    <span class="leg-item"><span style="background:#f0e6d8;border-radius:2px;padding:0 4px">farbig</span>&nbsp;bereits nachgeschlagen</span>
+
+  <!-- Rechte Spalte: Erklärungsleiste -->
+  <div class="panel" id="panel">
+    <div class="panel-empty" id="panelEmpty">
+      ← Klicken Sie auf ein unterstrichenes Wort
+    </div>
+    <div class="panel-content" id="panelContent">
+      <span class="p-badge" id="pBadge" style="display:none">Redewendung</span>
+      <span class="p-word" id="pWord"></span>
+      <span class="p-pos"  id="pPos"></span>
+      <span class="p-def"  id="pDef"></span>
+      <span class="p-ex"   id="pEx" style="display:none"></span>
+    </div>
   </div>
-</div>
-<div class="tip" id="tip">
-  <div class="tip-arr"></div>
-  <span class="tphrase" id="tphrase" style="display:none">Redewendung</span>
-  <span class="tw" id="tw"></span>
-  <span class="tpos" id="tpos"></span>
-  <span class="tdef" id="tdef"></span>
-  <div class="tex" id="tex"></div>
+
 </div>
 <script>
 const DICT = {"abschreiben": {"def": "Das heimliche Kopieren von Antworten oder Texten von anderen Personen, besonders in der Schule oder bei Prüfungen. Das ist nicht erlaubt und gilt als Betrug.", "example": "Der Lehrer hat den Schüler beim Abschreiben in der Klassenarbeit gesehen.", "is_phrase": false, "pos": "Substantiv"}, "abwarten": {"def": "Nicht sofort handeln, sondern erst einmal warten und schauen, was passiert. Man bleibt ruhig und macht nichts, bis man mehr weiß.", "example": "Bevor du dich beschwerst, solltest du abwarten, ob sich das Problem von selbst löst.", "is_phrase": false, "pos": "Verb"}, "amokalarm": {"def": "Ein Alarm oder eine Warnung, die ausgelöst wird, wenn jemand mit einer Waffe andere Menschen angreift oder bedroht. Schulen und öffentliche Gebäude haben spezielle Durchsagen und Pläne für diese gefährliche Situation.", "example": "Als der Amokalarm in der Schule ausgelöst wurde, mussten alle Schüler sofort in den Klassenräumen bleiben und die Türen abschließen.", "is_phrase": false, "pos": "Substantiv"}, "amokläufer": {"def": "Eine Person, die plötzlich und ohne klaren Grund andere Menschen angreift oder verletzt. Oft wird das Wort auch für jemanden benutzt, der sich sehr aggressiv und unkontrolliert verhält.", "example": "Nach dem Streit benimmt er sich wie ein Amokläufer und schreit alle an.", "is_phrase": false, "pos": "Substantiv"}, "angst": {"def": "Ein starkes Gefühl, wenn man sich vor etwas fürchtet oder glaubt, dass etwas Schlimmes passieren könnte. Man fühlt sich unsicher und hat Sorge.", "example": "Vor der wichtigen Prüfung hatte sie große Angst und konnte nicht schlafen.", "is_phrase": false, "pos": "Substantiv"}, "antwortete": {"def": "Eine Reaktion auf eine Frage oder Aussage geben. Es ist die Vergangenheitsform von 'antworten'.", "example": "Als er fragte, ob sie mitkommen möchte, antwortete sie sofort mit 'Ja'.", "is_phrase": false, "pos": "Verb"}, "anweisungen": {"def": "Befehle oder Informationen, die jemandem sagen, was er tun soll. Man bekommt sie von einer Person oder Organisation, die mehr Macht hat.", "example": "Die Mitarbeiter warteten auf Anweisungen von ihrem Chef, wie sie mit dem Problem umgehen sollten.", "is_phrase": false, "pos": "Substantiv"}, "arbeitet": {"def": "Eine Tätigkeit oder Aufgabe fortsetzen, die man schon begonnen hat. Man macht mit der Arbeit weiter, ohne aufzuhören.", "example": "Nach der Pause arbeitet die Klasse weiter an ihren Projekten.", "is_phrase": false, "pos": "Verb"}, "atmete": {"def": "Luft in die Lunge ziehen und wieder ausatmen. Wenn jemand schwer atmet, macht er das mit Mühe oder Anstrengung.", "example": "Nach dem schnellen Laufen atmete sie schwer und musste sich ausruhen.", "is_phrase": false, "pos": "Verb"}, "aufgabe": {"def": "Eine Übung oder Frage, die man in der Schule lösen muss. Oft gibt es mehrere Aufgaben nacheinander, die nummeriert sind.", "example": "In der Mathematikstunde mussten wir fünf schwere Aufgaben rechnen.", "is_phrase": false, "pos": "Substantiv"}, "augen": {"def": "Die beiden Körperteile im Gesicht, mit denen man sehen kann. Sie können verschiedene Farben haben, wie blau, braun oder grün.", "example": "Das kleine Mädchen hat große braune Augen wie ihre Mutter.", "is_phrase": false, "pos": "Substantiv"}, "beim": {"def": "bedeutet: während einer Handlung ertappen oder entdecken. Man sieht jemanden genau in dem Moment, wo er etwas Verbotenes oder Heimliches macht.", "example": "Die Lehrerin hat den Schüler beim Spicken erwischt.", "is_phrase": true, "pos": "Redewendung"}, "bekommt": {"def": "Das Gefühl der Angst entwickeln oder zu spüren beginnen. Es bedeutet, dass jemand anfängt, sich zu fürchten.", "example": "Wenn es dunkel wird, bekommt das Kind oft Angst vor Gespenstern.", "is_phrase": false, "pos": "Verb"}, "besonders": {"def": "verstärkt eine Verneinung; bedeutet 'nicht sehr' oder 'nicht wirklich'", "example": "Das Essen hat mir nicht besonders geschmeckt.", "is_phrase": false, "pos": "Adverb"}, "bitte": {"def": "Ein Wort, das man benutzt, um höflich um etwas zu bitten oder um Ungeduld und Verwunderung auszudrücken. In Fragen kann es auch zeigen, dass man etwas nicht versteht oder sich ärgert.", "example": "Kannst du mir bitte helfen? - Was soll das bitte bedeuten?", "is_phrase": false, "pos": "Partikel"}, "blaue": {"def": "Die Farbe des Himmels oder des Meeres. Hier beschreibt es die Farbe der Augen einer Person.", "example": "Das kleine Mädchen hat wunderschöne blaue Augen wie ihr Vater.", "is_phrase": false, "pos": "Adjektiv"}, "bleiben": {"def": "Eine höfliche Bitte, dass jemand nicht nervös oder aufgeregt werden soll. Man sagt das, wenn eine Person sich beruhigen soll.", "example": "Der Arzt sagte zu dem Patienten: 'Bleiben Sie ruhig, die Operation ist nicht gefährlich.'", "is_phrase": true, "pos": "Redewendung"}, "blickte": {"def": "Den Kopf zu jemandem drehen und ihn ansehen. Man schaut eine Person direkt an.", "example": "Als er meinen Namen rief, blickte ich zu ihm hinüber.", "is_phrase": false, "pos": "Verb"}, "blond": {"def": "Mit hellen, gelben oder gelblich-braunen Haaren. Menschen mit blonden Haaren haben eine helle Haarfarbe.", "example": "Meine Schwester ist blond, aber ich habe dunkle Haare.", "is_phrase": false, "pos": "Adjektiv"}, "dachte": {"def": "Vergangenheitsform von 'denken'. Hier bedeutet es: eine Meinung oder Vermutung haben, glauben dass etwas so ist.", "example": "Ich dachte, der Bus kommt um 8 Uhr, aber er war schon weg.", "is_phrase": false, "pos": "Verb"}, "dahin": {"def": "bis zu diesem Zeitpunkt; bis zu dem Moment, von dem gerade gesprochen wurde", "example": "Das Meeting ist um 15 Uhr, bis dahin kann ich noch die E-Mails beantworten.", "is_phrase": false, "pos": "Adverb"}, "depp": {"def": "Ein unhöfliches Wort für eine Person, die sich dumm oder ungeschickt verhält. Man sagt es, wenn man sich über jemanden ärgert.", "example": "\"Du bist wirklich ein Depp, wenn du bei diesem Regen ohne Jacke rausgehst!\"", "is_phrase": false, "pos": "Substantiv"}, "dicke": {"def": "Sehr rund und voll, oft bei Körperteilen wie Wangen. Macht das Gesicht weich und jugendlich.", "example": "Das Baby hatte dicke Bäckchen, die alle gern streicheln wollten.", "is_phrase": false, "pos": "Adjektiv"}, "drehte": {"def": "Mit den Fingern oder der Hand etwas im Kreis bewegen, um es zu öffnen oder zu schließen. Man macht eine runde Bewegung mit der Hand.", "example": "Sie drehte den Deckel vom Marmeladenglas ab.", "is_phrase": false, "pos": "Verb"}, "dritte": {"def": "Zeigt an, dass etwas an der Position Nummer 3 in einer Reihenfolge steht. Kommt nach dem ersten und zweiten Element.", "example": "Ich habe schon die erste und zweite Frage beantwortet, jetzt mache ich die dritte.", "is_phrase": false, "pos": "Adjektiv"}, "durcheinander": {"def": "Alle sprechen zur gleichen Zeit, so dass man niemanden richtig verstehen kann. Es entsteht ein großes Stimmengewirr.", "example": "In der Diskussion redeten alle durcheinander, deshalb konnte der Lehrer nichts verstehen.", "is_phrase": false, "pos": "Adverb"}, "durchsage": {"def": "Eine offizielle Nachricht, die über Lautsprecher in einem Gebäude gemacht wird. Alle Menschen in dem Gebäude können diese Nachricht hören.", "example": "Am Flughafen kam eine Durchsage, dass der Flug nach Berlin Verspätung hat.", "is_phrase": false, "pos": "Substantiv"}, "echten": {"def": "nicht falsch oder nachgemacht, sondern wirklich so wie es scheint; eine richtige Waffe, die wirklich gefährlich ist", "example": "Die Polizei warnte vor dem Dieb, weil er eine echte Pistole bei sich hatte.", "is_phrase": false, "pos": "Adjektiv"}, "echter": {"def": "Wirklich real und nicht nur so getan oder falsch. Hier bedeutet es: tatsächlich gefährlich und nicht nur ein Fehlalarm oder eine Übung.", "example": "Die Polizei musste prüfen, ob es sich um eine echte Bombendrohung oder nur einen schlechten Scherz handelte.", "is_phrase": false, "pos": "Adjektiv"}, "ecke": {"def": "Die Stelle in einem Raum, wo zwei Wände aufeinandertreffen. Ein Ort am Rand eines Raumes, der oft ruhig und wenig beachtet ist.", "example": "Sie stellte ihren Schreibtisch in die Ecke am Fenster.", "is_phrase": false, "pos": "Substantiv"}, "eigentlich": {"def": "wird verwendet, um zu sagen, wie jemand oder etwas in Wirklichkeit heißt oder ist. Es zeigt den echten, richtigen Namen oder Zustand.", "example": "Der Schauspieler heißt eigentlich Hans Müller, aber auf der Bühne nennt er sich Rocky Star.", "is_phrase": false, "pos": "Adverb"}, "einfach": {"def": "betont, dass etwas ohne weitere Erklärung oder Diskussion so gemacht werden soll; drückt aus, dass keine andere Möglichkeit in Betracht kommt", "example": "Du gehst jetzt einfach ins Bett und diskutierst nicht weiter.", "is_phrase": false, "pos": "Adverb"}, "ende": {"def": "Etwas komplett fertig machen oder vollständig beenden. Man macht eine Aufgabe oder Tätigkeit bis zum Schluss.", "example": "Die Schüler müssen den Test zu Ende schreiben, auch wenn die Zeit knapp wird.", "is_phrase": true, "pos": "Redewendung"}, "endlich": {"def": "drückt Ungeduld aus; bedeutet dass etwas sofort passieren soll, weil man schon lange wartet", "example": "Komm endlich her, wir warten schon eine Stunde auf dich!", "is_phrase": false, "pos": "Adverb"}, "ersten": {"def": "Die Reihe, die ganz vorne ist, am nächsten zur Bühne oder zum Geschehen.", "example": "In der ersten Reihe im Theater kann man die Schauspieler sehr gut sehen.", "is_phrase": false, "pos": "Adjektiv"}, "erwischt": {"def": "Jemanden dabei erwischen bedeutet: eine Person dabei beobachten oder entdecken, wie sie etwas Verbotenes oder Heimliches tut. Die Person wird auf frischer Tat ertappt.", "example": "Die Mutter hat ihren Sohn dabei erwischt, wie er heimlich Süßigkeiten aus der Küche genommen hat.", "is_phrase": true, "pos": "Redewendung"}, "extra": {"def": "Bedeutet hier: mit Absicht, speziell dafür. Die Person hat bewusst und gezielt nach diesem Platz gesucht.", "example": "Sie ist extra früh aufgestanden, um den ersten Bus zu bekommen.", "is_phrase": false, "pos": "Adverb"}, "falsch": {"def": "Das sagt man, wenn man klarstellen will, dass die andere Person die eigenen Worte nicht negativ verstehen soll. Man möchte Missverständnisse vermeiden.", "example": "Versteh mich nicht falsch, aber dein neuer Haarschnitt gefällt mir nicht so gut.", "is_phrase": true, "pos": "Redewendung"}, "filler": {"def": "Filler ist hier der Familienname einer Person. Es ist der Nachname des Mathematiklehrers in der Geschichte.", "example": "Frau Schmidt ist unsere neue Deutschlehrerin.", "is_phrase": false, "pos": "Eigenname"}, "filmstar": {"def": "Ein sehr berühmter Schauspieler, der in vielen Filmen mitspielt und den sehr viele Menschen kennen. Filmstars sind oft sehr attraktiv und elegant.", "example": "Er bewegte sich so elegant wie ein Filmstar auf dem roten Teppich.", "is_phrase": false, "pos": "Substantiv"}, "fiona": {"def": "sehr gut aussehend und attraktiv (wird meist für Männer verwendet)", "example": "Der neue Kollege ist wirklich fiona - alle Frauen im Büro schauen ihm nach.", "is_phrase": false, "pos": "Adjektiv"}, "fragte": {"def": "Das ist die Vergangenheitsform von 'fragen'. Es bedeutet: eine Frage stellen, etwas wissen wollen.", "example": "Der Schüler fragte die Lehrerin nach den Hausaufgaben.", "is_phrase": false, "pos": "Verb"}, "freundin": {"def": "Eine weibliche Person, mit der man eine gute und vertraute Beziehung hat. Man verbringt gerne Zeit mit ihr und kann mit ihr über persönliche Dinge sprechen.", "example": "Meine Freundin Lisa hilft mir immer, wenn ich Probleme habe.", "is_phrase": false, "pos": "Substantiv"}, "ganz": {"def": "verstärkt die Bedeutung und bedeutet hier: völlig, komplett. Es zeigt, dass der Platz wirklich am allermeisten hinten war.", "example": "Sie wohnt ganz oben im Dachgeschoss.", "is_phrase": false, "pos": "Adverb"}, "gedacht": {"def": "Eine Meinung oder Vermutung über etwas haben. Man stellt sich vor, dass etwas so ist oder so passiert.", "example": "Ich hatte gedacht, dass der Film langweilig ist, aber er war sehr spannend.", "is_phrase": false, "pos": "Verb"}, "gehört": {"def": "Mit den Ohren wahrnehmen, was jemand gesagt hat. Hier fragt sich die Person, ob sie die Worte richtig verstanden hat.", "example": "Hast du gehört, was der Lehrer gesagt hat?", "is_phrase": false, "pos": "Verb"}, "genau": {"def": "sehr gut, vollständig und ohne Zweifel. Man weiß etwas sicher und hat alle wichtigen Informationen.", "example": "Maria wusste genau, dass ihr Bruder gelogen hatte.", "is_phrase": false, "pos": "Adverb"}, "gesucht": {"def": "einen Ort oder eine Stelle ausgewählt und gefunden haben, wo man sich hinsetzen oder aufhalten möchte", "example": "Sie hat sich einen ruhigen Tisch im Café gesucht.", "is_phrase": false, "pos": "Verb"}, "ging": {"def": "Vergangenheitsform von 'gehen'. Bedeutet: sich zu Fuß von einem Ort zu einem anderen bewegen.", "example": "Sie ging langsam zum Fenster und schaute hinaus.", "is_phrase": false, "pos": "Verb"}, "gleich": {"def": "bedeutet: in diesem Moment, sofort, ohne Wartezeit. Es zeigt, dass etwas sehr schnell oder plötzlich passiert.", "example": "Gleich begann es zu regnen, als wir das Haus verließen.", "is_phrase": false, "pos": "Adverb"}, "greta": {"def": "Ein weiblicher Vorname. Hier ist es der Name der Freundin von der Person, die spricht.", "example": "Ich gehe heute mit meiner Schwester Anna ins Kino.", "is_phrase": false, "pos": "Substantiv"}, "große": {"def": "Wenn jemand große Angst hat, dann fürchtet er sich sehr stark vor etwas. Es ist mehr als normale Angst - die Person hat richtig viel Angst.", "example": "Als der Hund auf mich zulief, hatte ich große Angst und rannte weg.", "is_phrase": true, "pos": "Redewendung"}, "gut": {"def": "sehr geschickt oder talentiert in etwas sein. Man kann etwas sehr gut machen oder verstehen.", "example": "Mein Bruder ist voll gut im Fußball und spielt in der Schulmannschaft.", "is_phrase": false, "pos": "Adjektiv"}, "haaren": {"def": "Die dünnen Fäden, die auf dem Kopf von Menschen wachsen. Sie können verschiedene Farben haben und lang oder kurz sein.", "example": "Maria hat ihre Haare heute zu einem Zopf geflochten.", "is_phrase": false, "pos": "Substantiv"}, "heißt": {"def": "bedeuten, dass etwas so ist oder so verstanden werden soll", "example": "Heißt das, du kommst heute nicht zur Party?", "is_phrase": false, "pos": "Verb"}, "herr": {"def": "Höfliche Anrede für einen Mann, besonders wenn man ihn nicht gut kennt oder Respekt zeigen möchte. Man verwendet es zusammen mit dem Nachnamen.", "example": "Herr Schmidt unterrichtet Geschichte an unserer Schule.", "is_phrase": false, "pos": "Substantiv"}, "hinten": {"def": "am Ende eines Raumes, weit weg vom Eingang oder von der Front. An der Stelle, die am weitesten vom vorderen Bereich entfernt ist.", "example": "Die Schüler setzten sich ganz hinten ins Klassenzimmer, damit der Lehrer sie nicht so gut sehen konnte.", "is_phrase": false, "pos": "Adverb"}, "hübsch": {"def": "So aussehend, dass andere Menschen einen schön und attraktiv finden. Man benutzt es meist für das Gesicht oder den ganzen Körper einer Person.", "example": "Alle Jungen in der Klasse fanden Lisa hübsch und wollten mit ihr tanzen.", "is_phrase": false, "pos": "Adjektiv"}, "hübsche": {"def": "Menschen, die schön aussehen und ein attraktives Äußeres haben. Das Wort beschreibt hier das physische Erscheinungsbild von Personen.", "example": "Meine neue Kollegin ist sehr hübsch und hat viele Verehrer.", "is_phrase": false, "pos": "Adjektiv"}, "ida-sophie": {"def": "Ein weiblicher Vorname, der aus zwei Namen zusammengesetzt ist: Ida und Sophie. Hier ist es der Name einer Person in der Geschichte.", "example": "Ida-Sophie ging jeden Morgen um acht Uhr zur Schule.", "is_phrase": false, "pos": "Eigenname"}, "idiot": {"def": "Eine Person, die dumm handelt oder sich schlecht benimmt. Das Wort ist eine Beleidigung und wird oft verwendet, wenn man sich über jemanden ärgert.", "example": "Als Tom wieder zu spät kam, dachte sie: Was für ein Idiot!", "is_phrase": false, "pos": "Substantiv"}, "jemand": {"def": "Eine unbekannte Person. Man weiß nicht, wer es ist oder ob diese Person wirklich da ist.", "example": "Hast du gehört? Jemand ist letzte Nacht in das Haus eingebrochen.", "is_phrase": false, "pos": "Pronomen"}, "kam": {"def": "Das Verb bedeutet hier: etwas passierte oder geschah plötzlich. Es drückt aus, dass etwas unerwartet oder schnell eintrat.", "example": "Plötzlich kam ein Gewitter und alle mussten ins Haus laufen.", "is_phrase": false, "pos": "Verb"}, "kind": {"def": "Eine Person, die jung und unschuldig aussieht oder sich so verhält. Man sagt das über Erwachsene, die sehr jugendlich wirken.", "example": "Mit ihren großen Augen und dem runden Gesicht sieht sie aus wie ein Kind, obwohl sie schon 25 ist.", "is_phrase": false, "pos": "Substantiv"}, "klausur": {"def": "Eine schriftliche Prüfung in der Schule oder Universität, die meist länger dauert als ein normaler Test. Die Schüler oder Studenten müssen Fragen beantworten oder Aufgaben lösen.", "example": "Morgen schreiben wir eine Klausur in Mathematik, deshalb muss ich heute Abend noch viel lernen.", "is_phrase": false, "pos": "Substantiv"}, "klingen": {"def": "einen bestimmten Eindruck mit der Stimme machen; so sprechen, dass andere Menschen denken, man ist auf eine bestimmte Art (selbstsicher, nervös, müde usw.)", "example": "Sie klang am Telefon sehr müde, obwohl sie eigentlich gut geschlafen hatte.", "is_phrase": false, "pos": "Verb"}, "knackte": {"def": "Ein kurzes, trockenes Geräusch machen, wie es elektronische Geräte oft am Ende einer Übertragung oder beim Ausschalten produzieren. Das Geräusch zeigt hier an, dass die Lautsprecherverbindung beendet wurde.", "example": "Das alte Radio knackte und wurde dann still.", "is_phrase": false, "pos": "Verb"}, "knallermann": {"def": "Ein Spitzname oder Kosename für eine Person, hier für jemanden namens Sylvester. Oft wird so jemand genannt, der laut ist oder gerne Krach macht.", "example": "Die Schüler nannten ihren Mitschüler Max immer Knallermann, weil er so laut lachte.", "is_phrase": false, "pos": "Substantiv"}, "können": {"def": "in der Lage sein, etwas zu tun; die Möglichkeit oder Fähigkeit haben, etwas zu machen", "example": "Wir können heute nicht mehr einkaufen gehen, weil alle Geschäfte geschlossen sind.", "is_phrase": false, "pos": "Verb"}, "langen": {"def": "Das Gegenteil von kurz. Wenn etwas lang ist, hat es viel Ausdehnung von einem Ende zum anderen.", "example": "Maria hat sehr lange Haare, die ihr bis zur Taille reichen.", "is_phrase": false, "pos": "Adjektiv"}, "lautsprecher": {"def": "Ein Gerät, das Töne und Sprache verstärkt, damit viele Menschen etwas hören können. Wird oft in Schulen, Büros oder öffentlichen Gebäuden für Durchsagen verwendet.", "example": "Über den Lautsprecher wurde bekannt gegeben, dass der Unterricht früher endet.", "is_phrase": false, "pos": "Substantiv"}, "lda-sophie": {"def": "Ein weiblicher Vorname, der aus zwei Teilen besteht: Ida und Sophie. Die Person mit diesem Namen ist eine Figur in der Geschichte.", "example": "Ida-Sophie ist meine Nachbarin und arbeitet als Lehrerin.", "is_phrase": false, "pos": "Substantiv"}, "letzten": {"def": "Das Adjektiv beschreibt die Reihe, die am weitesten hinten im Raum ist. Es bedeutet hier die hinterste Position in einer Anordnung von Sitzreihen.", "example": "Die Schüler in der letzten Reihe können die Tafel manchmal schlecht sehen.", "is_phrase": false, "pos": "Adjektiv"}, "lief": {"def": "sich zu Fuß fortbewegen, gehen. Das ist die Vergangenheitsform von 'laufen'.", "example": "Das Kind lief schnell zu seiner Mutter.", "is_phrase": false, "pos": "Verb"}, "lockigen": {"def": "Haare, die sich in runden Formen drehen und nicht gerade sind. Man sagt auch: die Haare haben Locken oder sind wellig.", "example": "Meine Schwester hat von Natur aus lockige Haare, während meine Haare völlig glatt sind.", "is_phrase": false, "pos": "Adjektiv"}, "mach": {"def": "Imperativ von 'machen' - bedeutet hier: schließen, zumachen. Sylvester fordert jemanden auf, die Tür zu schließen.", "example": "Mach bitte das Fenster zu, es wird kalt!", "is_phrase": false, "pos": "Verb"}, "mal": {"def": "Macht eine Bitte oder Aufforderung höflicher und weniger direkt. Zeigt, dass die Person freundlich fragt und nicht befiehlt.", "example": "Könntest du mal das Fenster öffnen?", "is_phrase": false, "pos": "Modalpartikel"}, "mark": {"def": "Ein männlicher Vorname. Mark ist hier der Name einer Person.", "example": "Mark ist mein Klassenkamerad und wohnt in der Nachbarstraße.", "is_phrase": false, "pos": "Substantiv"}, "mathe": {"def": "Kurze Form für das Schulfach Mathematik. Man sagt das oft in der gesprochenen Sprache.", "example": "Lisa hat morgen eine Klassenarbeit in Mathe.", "is_phrase": false, "pos": "Substantiv"}, "mathe-klausur": {"def": "Eine wichtige schriftliche Prüfung im Fach Mathematik in der Schule oder Universität. Während einer Klausur müssen die Schüler oder Studenten still arbeiten und dürfen normalerweise nicht gestört werden.", "example": "Die Mathe-Klausur dauerte zwei Stunden und war sehr schwierig.", "is_phrase": false, "pos": "Substantiv"}, "mathelehrer": {"def": "Ein Lehrer, der das Schulfach Mathematik unterrichtet. Er bringt Schülern Rechnen, Algebra, Geometrie und andere mathematische Themen bei.", "example": "Unser Mathelehrer erklärt die Gleichungen sehr verständlich.", "is_phrase": false, "pos": "Substantiv"}, "meint": {"def": "Eine Meinung haben oder glauben, dass etwas so ist. Man fragt andere nach ihrer Einschätzung einer Situation.", "example": "Meint ihr, es wird heute noch regnen?", "is_phrase": false, "pos": "Verb"}, "meldete": {"def": "Die Hand heben oder etwas sagen, um zu zeigen, dass man eine Frage beantworten möchte oder etwas zu einem Thema sagen will. Man macht auf sich aufmerksam, um zu sprechen.", "example": "In der Diskussion meldete sich Lisa und sagte ihre Meinung zu dem Thema.", "is_phrase": true, "pos": "Redewendung"}, "menschen": {"def": "Personen, Leute. Das Wort wird hier verwendet, um über Personen zu sprechen, die man schön oder attraktiv findet.", "example": "In der Stadt sieht man viele verschiedene Menschen.", "is_phrase": false, "pos": "Substantiv"}, "merkte": {"def": "bemerken oder spüren, dass etwas passiert. Man nimmt etwas wahr, ohne dass man bewusst darauf achtet.", "example": "Sie merkte, dass jemand hinter ihr ging.", "is_phrase": false, "pos": "Verb"}, "mitten": {"def": "während etwas anderes passiert; genau in dem Moment, wo etwas stattfindet", "example": "Mitten im Gespräch klingelte plötzlich das Telefon.", "is_phrase": false, "pos": "Adverb"}, "mochte": {"def": "Jemanden nicht gern haben oder nicht sympathisch finden. Das ist die Vergangenheitsform von 'mögen' in der Verneinung.", "example": "Er mochte seinen neuen Kollegen nicht, weil er immer zu laut redete.", "is_phrase": false, "pos": "Verb"}, "mädchen": {"def": "Junge Frauen oder weibliche Jugendliche. Das Wort wird hier umgangssprachlich für Personen verwendet, die sich für jemanden interessieren oder ihn attraktiv finden.", "example": "Die Mädchen aus der Klasse finden den neuen Schüler sehr sympathisch.", "is_phrase": false, "pos": "Substantiv"}, "mögliche": {"def": "Diese Wendung bedeutet: sehr viele verschiedene Dinge sind denkbar. Man weiß nicht genau, was es ist, aber es gibt viele Optionen.", "example": "Warum ist er nicht gekommen? Das kann alles Mögliche sein - vielleicht ist er krank oder hatte einen Unfall.", "is_phrase": true, "pos": "Phrase"}, "müssen": {"def": "bedeutet hier, dass etwas nötig oder erforderlich ist; drückt eine Pflicht oder Notwendigkeit aus", "example": "Wir müssen heute unsere Hausaufgaben machen, sonst bekommen wir Ärger.", "is_phrase": false, "pos": "Verb"}, "nein": {"def": "Ein Wort, das man sagt, wenn man etwas nicht glauben kann oder stark ablehnt. Es drückt hier Überraschung und Widerspruch aus.", "example": "Nein, so etwas habe ich noch nie gehört!", "is_phrase": false, "pos": "Ausruf"}, "nickte": {"def": "Den Kopf nach unten und oben bewegen, um zu zeigen, dass man ja sagt oder zustimmt. Man macht das ohne Worte.", "example": "Als ich fragte, ob er Zeit hat, nickte er nur und sagte nichts.", "is_phrase": false, "pos": "Verb"}, "nie": {"def": "Zu keiner Zeit, nicht ein einziges Mal. Das Wort drückt aus, dass etwas überhaupt nicht passiert oder passiert ist.", "example": "Ich war nie in Italien und möchte das Land gerne besuchen.", "is_phrase": false, "pos": "Adverb"}, "platz": {"def": "Eine Stelle, wo man sitzen oder stehen kann. Hier bedeutet es einen Sitzplatz in einem Raum.", "example": "In der Bibliothek suchte sie sich einen ruhigen Platz am Fenster.", "is_phrase": false, "pos": "Substantiv"}, "raum": {"def": "Ein Zimmer oder ein Bereich in einem Gebäude, der von Wänden umgeben ist. Man kann dort hineingehen und die Tür schließen.", "example": "Bei Feueralarm sollten alle Personen den Raum sofort verlassen.", "is_phrase": false, "pos": "Substantiv"}, "rechnen": {"def": "Mathematische Aufgaben lösen, mit Zahlen arbeiten. Man addiert, subtrahiert, multipliziert oder dividiert Zahlen.", "example": "Die Schülerin rechnet die Aufgaben im Mathebuch.", "is_phrase": false, "pos": "Verb"}, "redeten": {"def": "Mehrere Personen sprachen zur gleichen Zeit, ohne aufeinander zu hören. Niemand wartete, bis der andere fertig war mit dem Sprechen.", "example": "In der Diskussion redeten alle durcheinander, deshalb konnte man nichts verstehen.", "is_phrase": false, "pos": "Verb"}, "reihe": {"def": "Eine Linie von Sitzplätzen in einem Raum, zum Beispiel im Klassenzimmer, Kino oder Theater. Die erste Reihe ist ganz vorne, die letzte Reihe ist ganz hinten.", "example": "In der mittleren Reihe konnte ich die Tafel gut sehen.", "is_phrase": false, "pos": "Substantiv"}, "richtig": {"def": "So, wie es wirklich war; ohne Fehler beim Hören oder Verstehen. Man fragt sich das, wenn man nicht sicher ist, ob man etwas korrekt gehört hat.", "example": "Die Musik war so laut - habe ich richtig gehört, dass du weggehst?", "is_phrase": false, "pos": "Adverb"}, "rief": {"def": "Das ist die Vergangenheitsform von 'rufen'. Es bedeutet: laut sprechen oder schreien, damit andere Personen es hören.", "example": "Die Mutter rief ihre Kinder zum Essen.", "is_phrase": false, "pos": "Verb"}, "rosa": {"def": "Eine helle rötliche Farbe, die entsteht wenn die Haut warm wird oder wenn jemand sich schämt. Hier bedeutet es, dass Tamaras Wangen eine gesunde, warme Farbe haben.", "example": "Nach dem Spaziergang in der Kälte hatte sie ganz rosa Wangen.", "is_phrase": false, "pos": "Adjektiv"}, "ruhig": {"def": "Nicht sprechen, keinen Lärm machen. Man soll still sein und nichts sagen.", "example": "Die Lehrerin sagte zu den Schülern: 'Seid jetzt ruhig, ich muss euch etwas Wichtiges erklären.'", "is_phrase": false, "pos": "Adjektiv"}, "rum": {"def": "Eine umgangssprachliche Kurzform von 'herum'. Es bedeutet hier: in die entgegengesetzte Richtung drehen oder wenden.", "example": "Sie drehte den Schlüssel zweimal rum und die Tür ging auf.", "is_phrase": false, "pos": "Adverb"}, "sagte": {"def": "Das Verb benutzt man, um zu zeigen, dass jemand spricht oder etwas ausspricht. Es steht oft nach direkter Rede in Anführungszeichen.", "example": "\"Ich komme später\", sagte Maria zu ihrer Mutter.", "is_phrase": false, "pos": "Verb"}, "sah": {"def": "Das ist die Vergangenheitsform von 'sehen'. Es bedeutet: mit den Augen wahrnehmen oder den Blick auf etwas oder jemanden richten.", "example": "Sie sah ihren Freund vom anderen Ende des Platzes.", "is_phrase": false, "pos": "Verb"}, "saß": {"def": "Vergangenheitsform von 'sitzen'. Bedeutet: Ich hatte meinen Platz auf einem Stuhl oder einer Bank.", "example": "Gestern saß ich zwei Stunden im Wartezimmer beim Arzt.", "is_phrase": false, "pos": "Verb"}, "schicker": {"def": "gut aussehend, attraktiv und modisch gekleidet. Wird oft verwendet, wenn jemand einen guten Eindruck macht.", "example": "Die neue Lehrerin ist sehr schick und trägt immer elegante Kleidung.", "is_phrase": false, "pos": "Adjektiv"}, "schließen": {"def": "Eine Tür abschließen bedeutet: die Tür mit einem Schlüssel zudrehen, so dass niemand von außen hereinkommen kann. Man macht das, um sich zu schützen oder um allein zu sein.", "example": "Als sie die lauten Stimmen hörte, ging sie schnell ins Schlafzimmer und schloss die Tür ab.", "is_phrase": true, "pos": "Redewendung"}, "schließt": {"def": "Eine Tür mit einem Schlüssel oder Schloss fest machen, so dass andere Personen nicht hineinkommen können.", "example": "Vergiss nicht, die Haustür abzuschließen, wenn du das Haus verlässt.", "is_phrase": false, "pos": "Verb"}, "schnell": {"def": "in kurzer Zeit, ohne lange zu warten oder zu zögern", "example": "Als der Lehrer nicht hinschaute, schrieb Maria schnell die Antwort von ihrem Nachbarn ab.", "is_phrase": false, "pos": "Adverb"}, "schreiben": {"def": "Eine Prüfung oder Aufgabe komplett fertig machen und alle Fragen beantworten. Man verwendet diese Phrase, wenn man eine schriftliche Arbeit vollständig abschließen soll.", "example": "Die Schüler hatten nur eine Stunde Zeit, um den Test zu Ende zu schreiben.", "is_phrase": true, "pos": "Redewendung"}, "schrieb": {"def": "Vergangenheitsform von 'schreiben'. Hier bedeutet es: die Antworten von einem anderen Schüler kopieren, ohne selbst zu denken.", "example": "Tim schrieb bei der Klassenarbeit von seiner Nachbarin ab, weil er nicht gelernt hatte.", "is_phrase": false, "pos": "Verb"}, "schritte": {"def": "Eine Bewegung mit dem Fuß beim Gehen. Wenn man einen Schritt macht, bewegt man einen Fuß nach vorne.", "example": "Sie machte drei Schritte und blieb dann stehen.", "is_phrase": false, "pos": "Substantiv"}, "schwer": {"def": "mit Mühe und Anstrengung atmen, oft weil man aufgeregt, gestresst oder erschöpft ist", "example": "Nach dem langen Lauf atmete sie schwer und musste sich erst einmal hinsetzen.", "is_phrase": false, "pos": "Adverb"}, "schwören": {"def": "jemandem versprechen, dass etwas wirklich wahr ist; sehr stark betonen, dass man die Wahrheit sagt", "example": "Ich schwöre dir, dass ich pünktlich da sein werde.", "is_phrase": false, "pos": "Verb"}, "seid": {"def": "2. Person Plural von 'sein' im Präsens - verwendet wenn man zu mehreren Personen spricht (wie 'du bist', aber für mehrere)", "example": "Ihr seid heute sehr müde, geht früh ins Bett.", "is_phrase": false, "pos": "Verb"}, "selbstsicher": {"def": "Eine Person ist selbstsicher, wenn sie Vertrauen in sich selbst hat und nicht nervös oder unsicher wirkt. Man zeigt, dass man glaubt, die Situation unter Kontrolle zu haben.", "example": "Die neue Chefin sprach selbstsicher vor allen Mitarbeitern und erklärte ihre Pläne.", "is_phrase": false, "pos": "Adjektiv"}, "setzte": {"def": "Bedeutet: den Körper auf einen Stuhl oder eine andere Sitzgelegenheit bringen, um zu sitzen. Man geht von einer stehenden Position in eine sitzende Position über.", "example": "Nach der langen Wanderung setzte sie sich auf die Bank im Park.", "is_phrase": true, "pos": "Redewendung"}, "seufzte": {"def": "Ein tiefer Atemzug, den man hört, wenn jemand traurig, müde oder unzufrieden ist. Man atmet dabei laut aus und zeigt so seine Gefühle.", "example": "Als Maria die schlechte Note sah, seufzte sie enttäuscht.", "is_phrase": false, "pos": "Verb"}, "sicherheitsproblem": {"def": "Eine gefährliche Situation, die Menschen bedroht und bei der schnell gehandelt werden muss. Oft wird dieser Begriff verwendet, wenn man nicht genau sagen möchte, welche Art von Gefahr es gibt.", "example": "Die Schule wurde wegen eines Sicherheitsproblems evakuiert, aber die Polizei wollte noch nicht sagen, was passiert war.", "is_phrase": false, "pos": "Substantiv"}, "sofort": {"def": "Bedeutet: jetzt gleich, ohne zu warten, in diesem Moment. Man benutzt es, wenn etwas sehr schnell passieren muss.", "example": "Du musst sofort zum Arzt gehen, dein Arm ist gebrochen.", "is_phrase": false, "pos": "Adverb"}, "solche": {"def": "Bezieht sich auf bestimmte Personen oder Dinge, die vorher genannt wurden oder aus dem Zusammenhang klar sind. Hier bedeutet es 'Menschen dieser Art' oder 'Leute wie diese'.", "example": "Ich mag keine arroganten Menschen. Solche nerve ich wirklich.", "is_phrase": false, "pos": "Pronomen"}, "soldaten": {"def": "Ein Mann, der bei der Armee arbeitet und kämpft. Soldaten tragen Uniform und haben Waffen.", "example": "Der junge Schauspieler musste für den Kriegsfilm lernen, wie sich ein Soldat bewegt.", "is_phrase": false, "pos": "Substantiv"}, "soll": {"def": "Drückt hier Verwirrung oder Ungläubigkeit aus. Man verwendet es in Fragen, wenn man nicht verstehen kann, wer oder was gemeint ist.", "example": "Wer soll das gewesen sein? Hier war doch niemand!", "is_phrase": false, "pos": "Modalverb"}, "sollt": {"def": "Eine Form von 'sollen' - drückt einen Befehl oder eine starke Aufforderung aus. Hier befiehlt Herr Filler mehreren Personen, dass sie warten müssen.", "example": "Der Lehrer sagte zu den Schülern: 'Ihr sollt eure Hausaufgaben machen!'", "is_phrase": false, "pos": "Verb"}, "spielt": {"def": "eine Rolle in einem Film oder Theater darstellen; so tun, als wäre man eine andere Person", "example": "In dem neuen Film spielt sie eine Ärztin, obwohl sie im echten Leben Lehrerin ist.", "is_phrase": false, "pos": "Verb"}, "stand": {"def": "Das ist die Vergangenheitsform von 'stehen'. Es bedeutet, dass eine Person sich von einem Platz erhebt oder aufrecht dasteht.", "example": "Als der Lehrer in die Klasse kam, stand Maria schnell von ihrem Stuhl auf.", "is_phrase": false, "pos": "Verb"}, "starrten": {"def": "Längere Zeit mit großen Augen in eine Richtung schauen, ohne wegzublicken. Man macht das, wenn man überrascht ist oder etwas Interessantes sieht.", "example": "Die Kinder starrten fasziniert auf den Zauberer auf der Bühne.", "is_phrase": false, "pos": "Verb"}, "stehen": {"def": "Jemanden sehr attraktiv und interessant finden. Es bedeutet, dass man sich zu einer Person hingezogen fühlt oder in sie verliebt ist.", "example": "Alle Jungs in der Klasse stehen auf die neue Schülerin, weil sie so hübsch ist.", "is_phrase": true, "pos": "Redewendung"}, "streng": {"def": "Mit einem bösen, unfreundlichen oder tadelnden Gesichtsausdruck. Zeigt, dass jemand nicht zufrieden ist oder Kritik hat.", "example": "Die Lehrerin schaute die Schüler streng an, weil sie zu laut waren.", "is_phrase": false, "pos": "Adverb"}, "stöhnten": {"def": "Ein Laut machen, der zeigt, dass man unzufrieden oder genervt ist. Man macht diesen Laut, wenn man etwas nicht gern hört oder machen will.", "example": "Die Schüler stöhnten, als der Lehrer mehr Hausaufgaben gab.", "is_phrase": false, "pos": "Verb"}, "sylvester": {"def": "Ein männlicher Vorname. Hier ist es der richtige Name einer Person, die normalerweise einen Spitznamen trägt.", "example": "Mein Freund wird von allen nur Basti genannt, aber er heißt eigentlich Sebastian.", "is_phrase": false, "pos": "Substantiv"}, "tamara": {"def": "Ein weiblicher Vorname. Die Person, die so heißt, ist hier eine Figur in der Geschichte.", "example": "Tamara ist meine Nachbarin und arbeitet als Lehrerin.", "is_phrase": false, "pos": "Eigenname"}, "tat": {"def": "Diese Phrase bedeutet: sich verhalten, als ob etwas wahr wäre, obwohl es nicht stimmt. Man zeigt anderen Menschen ein falsches Verhalten, um sie zu täuschen.", "example": "Maria tat so, als ob sie krank wäre, damit sie nicht zur Arbeit gehen musste.", "is_phrase": true, "pos": "Redewendung"}, "toll": {"def": "sehr schön, sehr attraktiv oder beeindruckend aussehen", "example": "Maria sah in ihrem neuen Kleid wirklich toll aus.", "is_phrase": false, "pos": "Adjektiv"}, "tun": {"def": "etwas machen oder handeln. Hier bedeutet es: wir können nichts mehr machen oder unternehmen.", "example": "Nach dem Unfall konnten die Ärzte nichts mehr für den Patienten tun.", "is_phrase": false, "pos": "Verb"}, "tür": {"def": "Ein beweglicher Teil aus Holz, Metall oder anderem Material, der eine Öffnung in der Wand verschließt. Man kann durch eine Tür in einen Raum hinein oder hinaus gehen.", "example": "Klopf bitte an die Tür, bevor du das Büro betrittst.", "is_phrase": false, "pos": "Substantiv"}, "umher": {"def": "von einem Ort zum anderen gehen oder laufen, ohne ein bestimmtes Ziel zu haben. Man bewegt sich in verschiedene Richtungen.", "example": "Die Kinder liefen im Garten umher und suchten Ostereier.", "is_phrase": false, "pos": "Adverb"}, "unglaublich": {"def": "sehr, extrem (wird verwendet, um etwas zu verstärken)", "example": "Das Konzert war unglaublich gut.", "is_phrase": false, "pos": "Adverb"}, "unterwegs": {"def": "sich irgendwo bewegen oder aufhalten, besonders draußen in der Gegend. Hier bedeutet es: jemand läuft herum und hat eine Waffe dabei.", "example": "Die Polizei warnt: Ein gefährlicher Mann ist mit einem Messer unterwegs.", "is_phrase": false, "pos": "Adverb"}, "vermutlich": {"def": "Das Wort drückt aus, dass man etwas nicht sicher weiß, aber glaubt oder annimmt. Es bedeutet 'wahrscheinlich' oder 'ich denke'.", "example": "Er ist vermutlich krank, weil er heute nicht zur Arbeit gekommen ist.", "is_phrase": false, "pos": "Adverb"}, "verrückt": {"def": "geistig krank oder nicht normal im Kopf. Eine Person, die verrückt ist, denkt und handelt seltsam oder unlogisch.", "example": "Der Mann redet mit unsichtbaren Personen - ich glaube, er ist verrückt.", "is_phrase": false, "pos": "Adjektiv"}, "verschluss": {"def": "Ein Teil an einer Flasche oder einem Behälter, den man drehen kann, um ihn zu öffnen oder zu schließen. Man nennt ihn auch Deckel oder Schraubverschluss.", "example": "Sie öffnete den Verschluss der Wasserflasche und trank einen Schluck.", "is_phrase": false, "pos": "Substantiv"}, "versteh": {"def": "Das sagt man, wenn man nicht möchte, dass jemand die eigenen Worte falsch deutet oder sich ärgert. Man will höflich sein und Missverständnisse vermeiden.", "example": "Versteh mich nicht falsch, aber dein neuer Haarschnitt gefällt mir nicht so gut.", "is_phrase": true, "pos": "Redewendung"}, "versuchte": {"def": "sich bemühen, etwas zu tun oder zu erreichen, aber nicht sicher sein, ob es gelingt", "example": "Sie versuchte, ruhig zu bleiben, obwohl sie sehr nervös war.", "is_phrase": false, "pos": "Verb"}, "voll": {"def": "Ein umgangssprachliches Wort, das 'sehr' oder 'wirklich' bedeutet. Es macht ein Adjektiv stärker.", "example": "Der Film war voll langweilig, ich bin fast eingeschlafen.", "is_phrase": false, "pos": "Adverb"}, "vorsichtig": {"def": "Mit Zurückhaltung und Unsicherheit sprechen, weil man Angst hat, etwas Falsches zu sagen oder andere zu verletzen. Man ist nicht sicher, wie die anderen reagieren werden.", "example": "Er fragte vorsichtig, ob er das Meeting verlassen könne, weil er nicht wusste, wie der Chef reagieren würde.", "is_phrase": false, "pos": "Adverb"}, "waffe": {"def": "Ein Gegenstand, mit dem man andere Menschen verletzen oder töten kann, zum Beispiel ein Messer oder eine Pistole. Waffen werden oft von Kriminellen oder im Krieg benutzt.", "example": "Die Polizei fand bei dem Verdächtigen eine Waffe in der Tasche.", "is_phrase": false, "pos": "Substantiv"}, "wahrscheinlich": {"def": "Drückt aus, dass etwas sehr möglich ist, aber man nicht ganz sicher ist. Man nimmt an, dass es so ist.", "example": "Wahrscheinlich regnet es morgen, denn der Himmel ist sehr dunkel.", "is_phrase": false, "pos": "Adverb"}, "wangen": {"def": "Die beiden weichen Teile des Gesichts links und rechts neben der Nase. Wenn jemand dicke Wangen hat, sieht das Gesicht rund und voll aus.", "example": "Das kleine Mädchen hatte rote Wangen vom kalten Wind.", "is_phrase": false, "pos": "Substantiv"}, "warten": {"def": "Nichts tun und bleiben, bis etwas passiert oder jemand kommt. Man bleibt an einem Ort oder in einer Situation, bis sich etwas ändert.", "example": "Die Schüler warten im Klassenzimmer auf ihre Lehrerin.", "is_phrase": false, "pos": "Verb"}, "was": {"def": "Ein Wort, das man sagt, wenn man etwas nicht verstanden hat oder überrascht ist. Man fragt damit: \"Wie bitte?\" oder \"Was hast du gesagt?\"", "example": "\"Wir fahren morgen nach Japan.\" - \"Was? Das ist ja eine Überraschung!\"", "is_phrase": false, "pos": "Interrogativpronomen"}, "weitere": {"def": "bedeutet zusätzliche oder noch mehr von etwas, was schon da ist oder erwartet wird. Es zeigt an, dass etwas zu dem dazukommt, was bereits vorhanden ist.", "example": "Nach dem Meeting bekommen wir weitere Informationen über das neue Projekt.", "is_phrase": false, "pos": "Adjektiv"}, "winter": {"def": "Ein Familienname oder Nachname einer Person. Wird hier als Name verwendet, um jemanden anzusprechen oder zu rufen.", "example": "Herr Müller wurde vom Chef gerufen: 'Hans Müller!'", "is_phrase": false, "pos": "Substantiv"}, "wirklich": {"def": "betont, dass etwas tatsächlich so ist, wie man es sagt; nicht nur so getan oder vermutet. Man ist sich sicher, dass es stimmt.", "example": "Ist das wirklich dein Auto oder hast du es nur geliehen?", "is_phrase": false, "pos": "Adverb"}, "wirkte": {"def": "einen bestimmten Eindruck machen oder erscheinen. Man benutzt es, wenn jemand oder etwas so aussieht, als hätte er eine bestimmte Eigenschaft.", "example": "Mit seinem neuen Anzug wirkte er sehr elegant und professionell.", "is_phrase": false, "pos": "Verb"}, "wissen": {"def": "sich einer Sache bewusst sein; etwas über sich selbst verstehen und erkennen", "example": "Sie weiß, dass sie sehr intelligent ist, und nutzt das zu ihrem Vorteil.", "is_phrase": false, "pos": "Verb"}, "wusste": {"def": "Vergangenheitsform von 'wissen'. Es bedeutet: eine Information haben oder etwas verstehen.", "example": "Maria wusste die richtige Antwort auf die Frage.", "is_phrase": false, "pos": "Verb"}, "würde": {"def": "Wird für den Konjunktiv II verwendet, um höfliche Fragen zu stellen oder um etwas auszudrücken, was möglich oder wahrscheinlich ist. Zeigt an, dass etwas nicht sicher ist oder nur eine Vermutung ist.", "example": "Würde der Zug pünktlich kommen, wenn es nicht schneien würde?", "is_phrase": false, "pos": "Hilfsverb"}, "ziemlich": {"def": "bedeutet \"sehr\" oder \"recht\", aber nicht ganz extrem. Es macht ein Adjektiv stärker, aber nicht so stark wie \"sehr\".", "example": "Das Restaurant war ziemlich teuer, aber das Essen war gut.", "is_phrase": false, "pos": "Adverb"}, "zuckte": {"def": "Eine plötzliche, unwillkürliche Bewegung machen, weil man erschreckt, überrascht oder schockiert ist. Man kann seinen Körper in diesem Moment nicht kontrollieren.", "example": "Als das Telefon plötzlich klingelte, zuckte sie zusammen.", "is_phrase": true, "pos": "Redewendung"}, "zusammen": {"def": "Eine plötzliche, unwillkürliche Bewegung des Körpers, weil man erschrickt oder sich fürchtet. Man kann den Körper nicht kontrollieren und bewegt sich ruckartig.", "example": "Als die Tür laut zuknallte, zuckte sie zusammen.", "is_phrase": true, "pos": "Redewendung"}, "zwei": {"def": "Die Zahl 2. Hier wird gesagt, wie viele Schritte die Person gemacht hat.", "example": "Sie machte zwei Sprünge über die Pfütze.", "is_phrase": false, "pos": "Zahlwort"}, "zweimal": {"def": "Das bedeutet: zwei Mal nacheinander, also insgesamt zwei Drehungen machen. Man dreht einmal und dann noch einmal.", "example": "Er klopfte zweimal an die Tür, bevor er eintrat.", "is_phrase": false, "pos": "Adverb"}};
 const META = {textId:"021_EL",condition:"standard",start:new Date().toISOString()};
 const counts = {};
 const log = [];
+let activeEl = null;
 
 function render() {
   const tb = document.getElementById('tb');
@@ -87,7 +160,8 @@ function render() {
     if (!tok) return;
     if (/^[ \t\n\r]+$/.test(tok)) { html += tok; return; }
     if (/^[.,!?;:\u201e\u201c\u00bb\u00ab\/\(\)\[\]\-\u2013\u2014]+$/.test(tok)) { html += tok; return; }
-    const key = tok.replace(/[^a-zA-Z\u00e4\u00f6\u00fc\u00c4\u00d6\u00dc\u00df'-]/gu,'').toLowerCase().replace(/^[-']+|[-']+$/g,'');
+    const key = tok.replace(/[^a-zA-Z\u00e4\u00f6\u00fc\u00c4\u00d6\u00dc\u00df'-]/gu,'')
+                   .toLowerCase().replace(/^[-']+|[-']+$/g,'');
     if (key && DICT[key]) {
       const cls = 'w' + (DICT[key].is_phrase ? ' phrase' : '');
       html += '<span class="' + cls + '" onclick="show(event,\'' + key + '\')">' + tok + '</span>';
@@ -98,66 +172,38 @@ function render() {
   tb.innerHTML = html;
 }
 
-function positionTooltip(tip, r) {
-  const tipWidth = Math.min(320, window.innerWidth - 20);
-  tip.style.maxWidth = tipWidth + 'px';
-  tip.style.visibility = 'hidden';
-  tip.style.display = 'block';
-  const tipHeight = tip.offsetHeight;
-  tip.style.visibility = '';
-
-  let left = r.left + r.width / 2 - tipWidth / 2;
-  left = Math.max(10, Math.min(left, window.innerWidth - tipWidth - 10));
-
-  const arr = tip.querySelector('.tip-arr');
-  const spaceBelow = window.innerHeight - r.bottom;
-  const spaceAbove = r.top;
-  let top;
-  if (spaceBelow >= tipHeight + 14 || spaceBelow >= spaceAbove) {
-    top = r.bottom + window.scrollY + 10;
-    arr.style.top = '-7px'; arr.style.bottom = 'auto';
-    arr.style.borderTop = 'none';
-    arr.style.borderBottom = '7px solid var(--tooltip-bg)';
-  } else {
-    top = r.top + window.scrollY - tipHeight - 14;
-    arr.style.top = 'auto'; arr.style.bottom = '-7px';
-    arr.style.borderBottom = 'none';
-    arr.style.borderTop = '7px solid var(--tooltip-bg)';
-  }
-  tip.style.left = left + 'px';
-  tip.style.top = top + 'px';
-}
-
 function show(e, k) {
   const d = DICT[k]; if (!d) return;
-  const tip = document.getElementById('tip');
 
-  document.getElementById('tw').textContent = k;
-  document.getElementById('tpos').textContent = d.pos || '';
-  document.getElementById('tdef').textContent = d.def || '';
-  const tex = document.getElementById('tex');
-  if (d.example) { tex.textContent = '\u201e' + d.example + '\u201c'; tex.style.display='block'; }
-  else tex.style.display='none';
-  const tph = document.getElementById('tphrase');
-  tph.style.display = d.is_phrase ? 'inline-block' : 'none';
+  // Aktives Wort hervorheben
+  if (activeEl) activeEl.classList.remove('active');
+  activeEl = e.currentTarget;
+  activeEl.classList.add('active', 'seen');
 
-  positionTooltip(tip, e.currentTarget.getBoundingClientRect());
-  tip.classList.add('on');
+  // Panel befüllen
+  document.getElementById('pWord').textContent = k;
+  document.getElementById('pPos').textContent  = d.pos || '';
+  document.getElementById('pDef').textContent  = d.def || '';
 
-  e.currentTarget.classList.add('seen');
+  const pEx = document.getElementById('pEx');
+  if (d.example) {
+    pEx.textContent = '\u201e' + d.example + '\u201c';
+    pEx.style.display = 'block';
+  } else {
+    pEx.style.display = 'none';
+  }
+
+  const pBadge = document.getElementById('pBadge');
+  pBadge.style.display = d.is_phrase ? 'inline-block' : 'none';
+
+  document.getElementById('panelEmpty').style.display   = 'none';
+  document.getElementById('panelContent').classList.add('visible');
+
+  // Tracking
   counts[k] = (counts[k]||0)+1;
   log.push({w:k,t:new Date().toISOString(),n:counts[k]});
   pushToSoSci();
 }
-
-// Tooltip schließen nur wenn auf leere Fläche geklickt wird
-document.addEventListener('click', function(e) {
-  const tip = document.getElementById('tip');
-  if (!tip.classList.contains('on')) return;
-  if (!e.target.closest('.w') && !e.target.closest('#tip')) {
-    tip.classList.remove('on');
-  }
-});
 
 function pushToSoSci() {
   const payload = {...META,counts,total:log.length,unique:Object.keys(counts).length,log};
@@ -165,7 +211,7 @@ function pushToSoSci() {
   try {
     const f = window.parent.document.getElementById('v_LOOKUPS');
     if (f) f.value = JSON.stringify(payload);
-  } catch(e) {}
+  } catch(ex) {}
 }
 
 document.addEventListener('DOMContentLoaded', render);
