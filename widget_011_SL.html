@@ -158,13 +158,14 @@ function render() {
   let html = '';
   tokens.forEach(tok => {
     if (!tok) return;
-    if (/^[ \t\n\r]+$/.test(tok)) { html += tok; return; }
+    if (/^[ \t]+$/.test(tok)) { html += tok; return; }
+    if (/^[\n\r]+$/.test(tok)) { html += '<br>'; return; }
     if (/^[.,!?;:\u201e\u201c\u00bb\u00ab\/\(\)\[\]\-\u2013\u2014]+$/.test(tok)) { html += tok; return; }
     const key = tok.replace(/[^a-zA-Z\u00e4\u00f6\u00fc\u00c4\u00d6\u00dc\u00df'-]/gu,'')
                    .toLowerCase().replace(/^[-']+|[-']+$/g,'');
     if (key && DICT[key]) {
       const cls = 'w' + (DICT[key].is_phrase ? ' phrase' : '');
-      html += '<span class="' + cls + '" onclick="show(event,\'' + key + '\')">' + tok + '</span>';
+      html += '<span class="' + cls + '" data-orig="' + tok + '" onclick="show(event,\'' + key + '\',this)">' + tok + '</span>';
     } else {
       html += tok;
     }
@@ -172,16 +173,19 @@ function render() {
   tb.innerHTML = html;
 }
 
-function show(e, k) {
+function show(e, k, el) {
   const d = DICT[k]; if (!d) return;
 
   // Aktives Wort hervorheben
   if (activeEl) activeEl.classList.remove('active');
-  activeEl = e.currentTarget;
+  activeEl = el || e.currentTarget;
   activeEl.classList.add('active', 'seen');
 
+  // Originalschreibweise aus data-orig holen
+  const orig = activeEl.getAttribute('data-orig') || k;
+
   // Panel befüllen
-  document.getElementById('pWord').textContent = k;
+  document.getElementById('pWord').textContent = orig;
   document.getElementById('pPos').textContent  = d.pos || '';
   document.getElementById('pDef').textContent  = d.def || '';
 
