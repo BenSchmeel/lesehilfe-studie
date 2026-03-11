@@ -98,9 +98,14 @@ function render() {
   tb.innerHTML = html;
 }
 
+// Bug 2 fix: globaler close-Handler
+let closeHandler = null;
+
 function show(e, k) {
+  e.stopPropagation();
   const d = DICT[k]; if (!d) return;
   const tip = document.getElementById('tip');
+
   document.getElementById('tw').textContent = k;
   document.getElementById('tpos').textContent = d.pos || '';
   document.getElementById('tdef').textContent = d.def || '';
@@ -109,19 +114,49 @@ function show(e, k) {
   else tex.style.display='none';
   const tph = document.getElementById('tphrase');
   tph.style.display = d.is_phrase ? 'inline-block' : 'none';
+
+  // Bug 1 fix: Tooltip-Hoehe messen und dann smart positionieren
   const r = e.currentTarget.getBoundingClientRect();
-  const tw = Math.min(320, window.innerWidth - 20);
-  tip.style.maxWidth = tw + 'px';
-  let left = r.left + r.width/2 - tw/2;
-  left = Math.max(10, Math.min(left, window.innerWidth - tw - 10));
-  tip.style.left = left + 'px';
-  tip.style.top = (r.top + window.scrollY - 160) + 'px';
+  const tipWidth = Math.min(320, window.innerWidth - 20);
+  tip.style.maxWidth = tipWidth + 'px';
+  tip.style.visibility = 'hidden';
   tip.classList.add('on');
+  const tipHeight = tip.offsetHeight;
+  tip.classList.remove('on');
+  tip.style.visibility = '';
+
+  let left = r.left + r.width / 2 - tipWidth / 2;
+  left = Math.max(10, Math.min(left, window.innerWidth - tipWidth - 10));
+
+  const arr = tip.querySelector('.tip-arr');
+  const spaceBelow = window.innerHeight - r.bottom;
+  const spaceAbove = r.top;
+  let top;
+  if (spaceBelow >= tipHeight + 14 || spaceBelow >= spaceAbove) {
+    top = r.bottom + window.scrollY + 10;
+    arr.style.top = '-7px'; arr.style.bottom = 'auto';
+    arr.style.borderTop = 'none';
+    arr.style.borderBottom = '7px solid var(--tooltip-bg)';
+  } else {
+    top = r.top + window.scrollY - tipHeight - 14;
+    arr.style.top = 'auto'; arr.style.bottom = '-7px';
+    arr.style.borderBottom = 'none';
+    arr.style.borderTop = '7px solid var(--tooltip-bg)';
+  }
+
+  tip.style.left = left + 'px';
+  tip.style.top = top + 'px';
+  tip.classList.add('on');
+
   e.currentTarget.classList.add('seen');
   counts[k] = (counts[k]||0)+1;
   log.push({w:k,t:new Date().toISOString(),n:counts[k]});
   pushToSoSci();
-  setTimeout(()=>document.addEventListener('click',()=>tip.classList.remove('on'),{once:true}),60);
+
+  // Bug 2 fix: alten Handler sauber entfernen
+  if (closeHandler) document.removeEventListener('click', closeHandler);
+  closeHandler = function() { tip.classList.remove('on'); };
+  setTimeout(() => document.addEventListener('click', closeHandler, {once:true}), 80);
 }
 
 function pushToSoSci() {
